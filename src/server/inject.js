@@ -11,15 +11,31 @@ export default function _inject (options = {}) {
    */
   return function inject () {
     // get meta info with sensible defaults
-    const info = getMetaInfo(options)(this.$root)
+    const originalInfo = getMetaInfo(options)(this.$root)
+    const info = {}
 
     // generate server injectors
-    for (let key in info) {
-      if (info.hasOwnProperty(key) && key !== 'titleTemplate') {
-        info[key] = generateServerInjector(options)(key, info[key])
+    for (let key in originalInfo) {
+      if (originalInfo.hasOwnProperty(key) && key !== 'titleTemplate') {
+        info[key] = generateServerInjector(options)(key, originalInfo[key])
       }
     }
 
+    info.seo = getSEOInfo(originalInfo)
+
     return info
   }
+}
+
+function getSEOInfo (info) {
+  return {
+    title: info.title || '',
+    description: getMetaTagContent('description', info) || '',
+    origin: info
+  }
+}
+
+function getMetaTagContent (name, info) {
+  const tag = (info.meta || []).filter(item => item.name === name)[0]
+  return (tag || {}).content
 }
