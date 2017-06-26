@@ -15,9 +15,9 @@ export default function _inject (options = {}) {
     const info = {}
 
     // generate server injectors
-    for (let key in originalInfo) {
-      if (originalInfo.hasOwnProperty(key) && key !== 'titleTemplate') {
-        info[key] = generateServerInjector(options)(key, originalInfo[key])
+    for (let key in info) {
+      if (info.hasOwnProperty(key) && key !== 'titleTemplate' && key !== 'titleChunk') {
+        info[key] = generateServerInjector(options)(key, info[key])
       }
     }
 

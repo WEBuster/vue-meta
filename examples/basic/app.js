@@ -16,6 +16,13 @@ new Vue({
     htmlAttrs: {
       lang: 'en',
       amp: undefined
-    }
+    },
+    meta: [
+      { name: 'description', content: 'Hello', vmid: 'test' }
+    ],
+    script: [
+      { innerHTML: '{ "@context": "http://www.schema.org", "@type": "Organization" }', type: 'application/ld+json' }
+    ],
+    __dangerouslyDisableSanitizers: ['script']
   })
 }).$mount('#app')

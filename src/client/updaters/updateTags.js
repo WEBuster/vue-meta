@@ -18,20 +18,38 @@ export default function _updateTags (options = {}) {
     const newTags = []
     let indexToDelete
 
+    if (tags.length > 1) {
+      // remove duplicates that could have been found by merging tags
+      // which include a mixin with metaInfo and that mixin is used
+      // by multiple components on the same page
+      const found = []
+      tags = tags.map(x => {
+        const k = JSON.stringify(x)
+        if (found.indexOf(k) < 0) {
+          found.push(k)
+          return x
+        }
+      }).filter(x => x)
+    }
+
     if (tags && tags.length) {
       tags.forEach((tag) => {
         const newElement = document.createElement(type)
 
         for (const attr in tag) {
           if (tag.hasOwnProperty(attr)) {
-            if (attribute === 'innerHTML') {
+            if (attr === 'innerHTML') {
               newElement.innerHTML = tag.innerHTML
-            } else if (attribute === 'cssText') {
+            } else if (attr === 'cssText') {
               if (newElement.styleSheet) {
                 newElement.styleSheet.cssText = tag.cssText
               } else {
                 newElement.appendChild(document.createTextNode(tag.cssText))
               }
+            } else if (attr === options.tagIDKeyName) {
+              const _attr = `data-${attr}`
+              const value = (typeof tag[attr] === 'undefined') ? '' : tag[attr]
+              newElement.setAttribute(_attr, value)
             } else {
               const value = (typeof tag[attr] === 'undefined') ? '' : tag[attr]
               newElement.setAttribute(attr, value)
