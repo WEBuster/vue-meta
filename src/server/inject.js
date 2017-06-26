@@ -11,8 +11,7 @@ export default function _inject (options = {}) {
    */
   return function inject () {
     // get meta info with sensible defaults
-    const originalInfo = getMetaInfo(options)(this.$root)
-    const info = {}
+    const info = getMetaInfo(options)(this.$root)
 
     // generate server injectors
     for (let key in info) {
@@ -21,21 +20,6 @@ export default function _inject (options = {}) {
       }
     }
 
-    info.seo = getSEOInfo(originalInfo)
-
     return info
   }
-}
-
-function getSEOInfo (info) {
-  return {
-    title: info.title || '',
-    description: getMetaTagContent('description', info) || '',
-    origin: info
-  }
-}
-
-function getMetaTagContent (name, info) {
-  const tag = (info.meta || []).filter(item => item.name === name)[0]
-  return (tag || {}).content
 }

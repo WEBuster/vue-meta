@@ -1,6 +1,6 @@
 // fallback to timers if rAF not present
-const stopUpdate = (typeof window !== 'undefined' ? window.cancelAnimationFrame : null) || clearTimeout
-const startUpdate = (cb) => window.setTimeout(cb, 0)
+const stopUpdate = clearTimeout
+const startUpdate = (cb) => setTimeout(cb, 0)
 
 /**
  * Performs a batched update. Uses requestAnimationFrame to prevent
